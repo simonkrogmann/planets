@@ -1,5 +1,5 @@
 # -*- coding: cp1252 -*-
-import Tkinter
+import tkinter
 
 class Scrollbar:
     """stellt eine Scrollbar für ein Canvas-Objekt bereit,
@@ -8,7 +8,7 @@ Parent muss dieses Canvas-Objekt als Attribut besitzen."""
         self.Parent = Parent
         self.X = X
 
-        self.Bar = self.Parent.Canvas.create_rectangle(0, 0, 2, 2, state = Tkinter.HIDDEN,
+        self.Bar = self.Parent.Canvas.create_rectangle(0, 0, 2, 2, state = tkinter.HIDDEN,
                                                       fill = "#444444", outline = "")
         self.Parent.Canvas.bind("<Configure>", self.UpdateRegion)
         self.Parent.Canvas.bind("<MouseWheel>", self.Wheel)
@@ -45,10 +45,10 @@ Parent muss dieses Canvas-Objekt als Attribut besitzen."""
             self.Parent.Canvas.config(scrollregion = (0, 0, 0, self.Height - 8))
             self.Scrollable = False
             self.Show(0)
-            self.Parent.Canvas.itemconfig(self.Bar, state = Tkinter.HIDDEN)
+            self.Parent.Canvas.itemconfig(self.Bar, state = tkinter.HIDDEN)
         else:
             self.Scrollable = True
-            self.Parent.Canvas.itemconfig(self.Bar, state = Tkinter.NORMAL)
+            self.Parent.Canvas.itemconfig(self.Bar, state = tkinter.NORMAL)
             self.Parent.Canvas.config(scrollregion = (0, 0, 0, self.Region))
             self.UpdateBar()
 

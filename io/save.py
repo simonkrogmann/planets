@@ -7,10 +7,8 @@ def SaveObj(Obj):
     """Methode zur Auswahl der Umwandlungsmethode"""
     Type = type(Obj)
     if Type in SaveMethods:
-        String = SaveMethods[Type](Obj)
-    else:
-        String = Obj.Identifier + SaveObj(Obj.Save())
-    return String
+        return SaveMethods[Type](Obj)
+    return Obj.Identifier + SaveObj(Obj.Save())
 
 # Methoden zum Umwandeln der entsprechenden Objekte
 def SaveBool(Obj):
@@ -42,7 +40,6 @@ def SaveDict(Obj):
 SaveMethods = {bool: SaveBool,
                type(None): SaveNone,
                int: SaveNumber,
-               long: SaveNumber,
                float: SaveFloat,
                str: SaveStr,
                list: SaveList,

@@ -15,10 +15,10 @@ def LoadObj(String, Index):
         return LoadMethods[Identifier](String, Index)
 
 class Count:
-    """Eine einfache Klasse mit einem Attribut, die als Zähler verwendet werden kann""" 
-    def __init__(self, V = 0):
+    """Eine einfache Klasse mit einem Attribut, die als Zähler verwendet werden kann"""
+    def __init__(self, V=0):
         self.V = V
-        
+
 # Methoden zum Umwandeln der entsprechenden Objekte
 def LoadBool(String, Index):
     Index.V += 1
@@ -46,22 +46,22 @@ def LoadStr(String, Index):
 
 def LoadList(String, Index):
     Length = LoadNumber(String, Index)
-    return [LoadObj(String, Index) for i in xrange(Length)]
+    return [LoadObj(String, Index) for i in range(Length)]
 
 def LoadTuple(String, Index):
     Length = LoadNumber(String, Index)
-    return tuple(LoadObj(String, Index) for i in xrange(Length))
+    return tuple(LoadObj(String, Index) for i in range(Length))
 
 def LoadDict(String, Index):
     Length = LoadNumber(String, Index)
-    return dict((LoadObj(String, Index), LoadObj(String, Index)) for i in xrange(Length))
+    return dict((LoadObj(String, Index), LoadObj(String, Index)) for i in range(Length))
 
 def LoadVector(String, Index):
     Index.V += 2
     X = LoadObj(String, Index)
     Y = LoadObj(String, Index)
     Z = LoadObj(String, Index)
-    return vector.Vector(X,Y,Z)
+    return vector.Vector(X, Y, Z)
 
 # Zuordnung Buchstabe => Umwandlungsmethode
 LoadMethods = {"b" : LoadBool,

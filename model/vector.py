@@ -5,7 +5,7 @@ from constants import Str
 class Vector(object):
     """stellt einen Vektor und dessen Grundoperationen bereit, kann auch als Punkt im 3-dimensionalen Raum verwendet werden"""
     Identifier = "v"
-    def __init__(self, X = 0,Y = 0, Z = 0):
+    def __init__(self, X=0, Y=0, Z=0):
         self._x = float(X)
         self._y = float(Y)
         self._z = float(Z)
@@ -42,38 +42,33 @@ class Vector(object):
 # arithmetische Standardoperationen
 
     def __add__(self, a):
-        """=> self + a
-a als Vektor"""
+        """=> self + a"""
         assert isinstance(a, Vector)
         return Vector(self.X + a.X, self.Y + a.Y, self.Z + a.Z)
 
     def __sub__(self, a):
-        """=> self - a
-a als Vektor"""
+        """=> self - a"""
         assert isinstance(a, Vector)
         return Vector(self.X - a.X, self.Y - a.Y, self.Z - a.Z)
 
     def __mul__(self, a):
-        """=> self * a
-a als Zahl"""
-        assert type(a) in [int, long, float]
+        """=> self * a"""
+        assert type(a) in [int, float]
         return Vector(self.X * a, self.Y * a, self.Z * a)
 
     def __rmul__(self, a):
-        """=> a * self
-a als Zahl"""
+        """=> a * self"""
         return self * a
 
-    def __div__(self, a):
-        """=> self / a
-a als Zahl"""
-        assert type(a) in [int, long, float]
+    def __truediv__(self, a):
+        """=> self / a"""
+        assert type(a) in [int, float]
         return Vector(self.X / a, self.Y / a, self.Z / a)
 
     def __pow__(self, a):
         """nimmt die Länge des Vektors hoch der Zahl a,
-verändert aber nicht die Richtung"""
-        assert type(a) in [int, long, float]
+        verändert aber nicht die Richtung"""
+        assert type(a) in [int, float]
         Factor = self.Length ** (a - 1)
         return self * Factor
 
@@ -98,8 +93,7 @@ verändert aber nicht die Richtung"""
         return str(self)
 
     def __eq__(self, a):
-        """=> self == a
-a als Vektor"""
+        """=> self == a"""
         if self.X == a.X and self.Y == a.Y and self.Z == a.Z:
             return True
 

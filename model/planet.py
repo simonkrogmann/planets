@@ -1,14 +1,14 @@
 # -*- coding: cp1252 -*-
 import vector
-from constants import G, pi
+from constants import G
 # Rechnungen erfolgen mit Standardeinheiten
 
 class Planet(object):
     """Objekt, das einen einzelnen Planeten, Stern etc. darstellt"""
-    def __init__(self, Parent, Name, Position = vector.Vector(0, 0, 0), Velocity = vector.Vector(0, 0, 0),
-                 Mass = 1, Diameter = 1e10, Trace = True, Fixed = False, Color = "yellow"):
+    def __init__(self, Parent, Name, Position=vector.Vector(0, 0, 0), Velocity=vector.Vector(0, 0, 0),
+                 Mass=1, Diameter=1e10, Trace=True, Fixed=False, Color="yellow"):
         self.Parent = Parent
-        self.Force = vector.Vector(0,0,0)
+        self.Force = vector.Vector(0, 0, 0)
         self.Positions = []
         self.Velocities = []
         # Speicherung der Daten in einem Dictionary
@@ -86,16 +86,16 @@ wird nicht genutzt und ist möglicherweise fehlerhaft"""
 
     def GravityOf(self, a):
         """berechnet die Gravitationskraft zwischen zwei Planeten und fügt sie zu deren Gesamtkraft hinzu"""
+        Direction = a.SimPosition - self.SimPosition
         try:
-            Direction = a.SimPosition - self.SimPosition
             Direction.Length = G * (self["mass"] * a["mass"]) / (self.SimPosition.DistanceTo(a.SimPosition)) ** 2
-            if not self["fixed"]:
-                self.Force += Direction
+        except ZeroDivisionError:
+            return
+        if not self["fixed"]:
+            self.Force += Direction
 
-            if not a["fixed"]:
-                a.Force -= Direction
-        except:
-            pass
+        if not a["fixed"]:
+            a.Force -= Direction
 
     def CollidesWith(self, a):
         """prüft, ob zwei Planeten kollidieren,
@@ -109,7 +109,7 @@ und speichert diese"""
         self.Positions.append(self.SimPosition.Tuple())
         self.SimVelocity += self.Force / self["mass"] * Interval
         self.Velocities.append(self.SimVelocity.Tuple())
-        self.Force = vector.Vector(0,0,0)
+        self.Force = vector.Vector(0, 0, 0)
 
     def __str__(self):
         """gibt die physikalischen Daten des Planeten als String zurück"""

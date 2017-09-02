@@ -1,7 +1,6 @@
 # -*- coding: cp1252 -*-
-import Tkinter
+import tkinter
 import vector
-import tkMessageBox
 
 class Drawing:
     """Die Basisklasse für ein Widget eines Listeneintrages"""
@@ -53,16 +52,16 @@ dessen Text man bearbeiten kann, wenn man auf ihn klickt"""
             self.ActiveColor = "lightgrey"
             self.Color = "darkgrey"
 
-        self.Drawing = Parent.Parent.Canvas.create_text(0, 0, anchor = Tkinter.NW, fill = self.Color,
+        self.Drawing = Parent.Parent.Canvas.create_text(0, 0, anchor = tkinter.NW, fill = self.Color,
                                                         text = self.Text)
 
         Drawing.__init__(self, Parent)
         self.PlaceLabel()
 
-        self.Entry = Tkinter.Entry(self.Parent.Parent.Canvas, width = Width)
+        self.Entry = tkinter.Entry(self.Parent.Parent.Canvas, width = Width)
         self.EntryWindow = self.Parent.Parent.Canvas.create_window(self.X + 1,
-                self.Y + 1 + self.Parent.Position, window = self.Entry, anchor = Tkinter.NW,
-                state = Tkinter.HIDDEN)
+                self.Y + 1 + self.Parent.Position, window = self.Entry, anchor = tkinter.NW,
+                state = tkinter.HIDDEN)
         self.Entry.bind("<Return>", self.StopEdit)
 
         self.IsEdited = False
@@ -75,23 +74,23 @@ dessen Text man bearbeiten kann, wenn man auf ihn klickt"""
 
     def PlaceLabel(self):
         """zeigt das Label"""
-        self.Parent.Parent.Canvas.itemconfig(self.Drawing, state = Tkinter.NORMAL)
+        self.Parent.Parent.Canvas.itemconfig(self.Drawing, state = tkinter.NORMAL)
         self.Parent.Parent.Canvas.coords(self.Drawing, self.X + 3,
                                          self.Parent.Position + self.Y + 3)
 
     def PlaceEntry(self):
         """zeigt das Eingabefeld"""
-        self.Parent.Parent.Canvas.itemconfig(self.EntryWindow, state = Tkinter.NORMAL)
+        self.Parent.Parent.Canvas.itemconfig(self.EntryWindow, state = tkinter.NORMAL)
         self.Parent.Parent.Canvas.coords(self.EntryWindow, self.X + 1,
                                          self.Parent.Position + self.Y + 1)
 
     def ForgetLabel(self):
         """versteckt das Label"""
-        self.Parent.Parent.Canvas.itemconfig(self.Drawing, state = Tkinter.HIDDEN)
+        self.Parent.Parent.Canvas.itemconfig(self.Drawing, state = tkinter.HIDDEN)
 
     def ForgetEntry(self):
         """versteckt das Eingabefeld"""
-        self.Parent.Parent.Canvas.itemconfig(self.EntryWindow, state = Tkinter.HIDDEN)
+        self.Parent.Parent.Canvas.itemconfig(self.EntryWindow, state = tkinter.HIDDEN)
 
     def Click(self, e = None):
         """bei Klick wird mit der Bearbeitung begonnen bzw. der Listeneintrag aktiviert"""
@@ -106,8 +105,8 @@ dessen Text man bearbeiten kann, wenn man auf ihn klickt"""
         self.IsEdited = True
 
         self.Entry.insert(0,self.Text)
-        self.Entry.icursor(Tkinter.END)
-        self.Entry.selection_range(0, Tkinter.END)
+        self.Entry.icursor(tkinter.END)
+        self.Entry.selection_range(0, tkinter.END)
 
         self.ForgetLabel()
         self.PlaceEntry()
@@ -121,7 +120,7 @@ dessen Text man bearbeiten kann, wenn man auf ihn klickt"""
         self.ForgetEntry()
         self.PlaceLabel()
 
-        self.Entry.delete(0, Tkinter.END)
+        self.Entry.delete(0, tkinter.END)
 
     def Activate(self):
         """farbliche Hervorhebung"""
@@ -138,7 +137,7 @@ dessen Text man bearbeiten kann, wenn man auf ihn klickt"""
     def Delete(self):
         """löscht das Widget"""
         self.Parent.Parent.Canvas.delete(self.Drawing)
-        self.Parent.Parent.Canvas.delete(self.Entry)
+        self.Parent.Parent.Canvas.delete(self.EntryWindow)
 
     def Update(self):
         """Neuzeichnung des Objekts"""
@@ -236,7 +235,7 @@ class Item:
 
     def BadInput(self, Tag, Value):
         """zeigt eine Fehlermeldung bei ungültigen Werten an"""
-        tkMessageBox.showwarning("Bad Input",
+        tkinter.messagebox.showwarning("Bad Input",
                 "Invalid input '{0}' for option '{1}'!".format(Value, Tag.title()))
 
     def Delete(self):

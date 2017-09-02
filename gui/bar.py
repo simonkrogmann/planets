@@ -1,5 +1,5 @@
 # -*- coding: cp1252 -*-
-import Tkinter
+import tkinter
 
 class ImageButton:
     """ein quadratischer Button/Schalter mit einem einfarbigen Bild für die Toolbar"""
@@ -16,7 +16,7 @@ class ImageButton:
         self.Enabled = True
 
         self.SetImage(ImagePath)
-        self.Drawing = self.Parent.create_image(X, Y, image = self.Image, anchor = Tkinter.NW)
+        self.Drawing = self.Parent.create_image(X, Y, image = self.Image, anchor = tkinter.NW)
         self.Parent.tag_bind(self.Drawing, "<Button-1>", self.Highlight)
         self.Parent.tag_bind(self.Drawing, "<B1-Motion>", self.Motion)
         self.Parent.tag_bind(self.Drawing, "<ButtonRelease-1>", self.Click)
@@ -29,7 +29,7 @@ class ImageButton:
     def SetImage(self, ImagePath):
         """legt das Bild fest"""
         if ImagePath.endswith(".xbm"):
-            self.Image = Tkinter.BitmapImage(file = ImagePath)
+            self.Image = tkinter.BitmapImage(file = ImagePath)
         else:
             self.Image = None
 
@@ -138,7 +138,7 @@ class Label:
         self.Parent = Parent
         self.X, self.Y = Parent.RequestPosition(Width)
         X, Y = self.X, self.Y
-        self.Drawing = self.Parent.create_text(X + 3, Y + 2, text = Text, anchor = Tkinter.NW)
+        self.Drawing = self.Parent.create_text(X + 3, Y + 2, text = Text, anchor = tkinter.NW)
 
     def Set(self, Text):
         """ändert den Text zum Parameter Text"""
@@ -151,11 +151,11 @@ class Separator:
         X, Y = Parent.RequestPosition(1)
         Parent.create_line(X, Y, X, Y + 20, fill = "darkgrey")
 
-class Bar(Tkinter.Canvas):
+class Bar(tkinter.Canvas):
     """eine leere mit verschiedenen Widgets befüllbare Toolbar"""
     def __init__(self, Parent, Width = 0):
         self.Parent = Parent
-        self.Canvas = Tkinter.Canvas.__init__(self, Parent, takefocus = False, bd = -2,
+        self.Canvas = tkinter.Canvas.__init__(self, Parent, takefocus = False, bd = -2,
                                          background = "#DAE4ED", highlightthickness = 0,
                                          height = 24, width = Width)
         self.FreeX = 0

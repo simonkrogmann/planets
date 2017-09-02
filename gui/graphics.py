@@ -1,32 +1,30 @@
 # -*- coding: cp1252 -*-
-import Tkinter
+import tkinter
 import vector
-import math
 import object_3D
-import time
 
 # Methoden für Vektorrechnung mit Tupeln
-def Add(a, b):
+def add(a, b):
     """addiert 2 Vektoren"""
     return (a[0] + b[0], a[1] + b[1], a[2] + b[2])
 
-def Sub(a, b):
+def sub(a, b):
     """zieht Vektor a von Vektor b ab"""
     return (a[0] - b[0], a[1] - b[1], a[2] - b[2])
 
-def Mul(a, b):
+def mul(a, b):
     """multipliziert Vektor a mit Faktor b"""
     return (a[0] * b, a[1] * b, a[2] * b)
 
-def ScP(a, b):
+def dot(a, b):
     """rechnet das Skalarprodukt von 2 Vektoren aus"""
-    return a[0] * b[0] + a[1] * b[1] +a[2] * b[2]
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 
-def Length(a):
+def length(a):
     """rechnet die Länge eines Vektors aus"""
     return (a[0] ** 2 + a[1] ** 2 + a[2] ** 2) ** .5
 
-def VP(a, b):
+def cross(a, b):
     """rechnet das Vektorprodukt von 2 Vektoren aus"""
     return (a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0])
 
@@ -35,10 +33,10 @@ class Graphics:
     def __init__(self, Parent, PlanetManager):
         self.Parent = Parent
         PlanetManager.Register(self)
-        self.Canvas = Tkinter.Canvas(self.Parent.Window, takefocus = True, borderwidth = -2,
-                                     background = "black", highlightthickness = 0)
-        self.Canvas.grid(row = 0, column = 1, rowspan = 2, columnspan = 2,
-                         sticky = Tkinter.N + Tkinter.S + Tkinter.E + Tkinter.W)
+        self.Canvas = tkinter.Canvas(self.Parent.Window, takefocus=True, borderwidth=-2,
+                                     background="black", highlightthickness=0)
+        self.Canvas.grid(row=0, column=1, rowspan=2, columnspan=2,
+                         sticky=tkinter.N + tkinter.S + tkinter.E + tkinter.W)
         self.Canvas.bind("<Button-1>", self.Click)
         self.Canvas.bind("<B1-Motion>", self.Motion)
         self.Canvas.bind("<MouseWheel>", self.Wheel)
@@ -53,7 +51,7 @@ class Graphics:
         self.MidX = 200
         self.MidY = 200
         # Mittelpunktskennzeichnung
-        self.Mid = self.Canvas.create_oval(199, 199, 201, 201, fill = "green", outline = "")
+        self.Mid = self.Canvas.create_oval(199, 199, 201, 201, fill="green", outline="")
 
         self.Items = []
         self.Drawings = []
@@ -76,15 +74,15 @@ class Graphics:
     def DrawGrid(self):
         """zeichnet das Orientierungsgitter"""
         Factor = 1e+10
-        for i in xrange(-5, 6):
-            for j in xrange(-5, 5):
+        for i in range(-5, 6):
+            for j in range(-5, 5):
                 Begin = (10 * j * Factor, 10 * i * Factor, 0)
                 End = (10 * (j + 1) * Factor, 10 * i * Factor, 0)
-                self.Drawings.append(object_3D.Line3D(self, Begin, End, "#222222"))
+                self.Drawings.append(object_3D.Line3D(self, Begin, End, "#555555"))
 
                 Begin = (10 * i * Factor, 10 * j * Factor, 0)
                 End = (10 * i * Factor, 10 * (j + 1) * Factor, 0)
-                self.Drawings.append(object_3D.Line3D(self, Begin, End, "#222222"))
+                self.Drawings.append(object_3D.Line3D(self, Begin, End, "#555555"))
 
     def Focus(self, e):
         """setzt den Fokus auf das Canvas-Objekt"""
@@ -111,60 +109,60 @@ und lässt das Objekt drehen"""
     def Wheel(self, e):
         """Zoom über das Mausrad"""
         Factor = 1.01 ** (- e.delta / 120)
-        self.Camera = Mul(self.Camera, Factor)
+        self.Camera = mul(self.Camera, Factor)
 
         # auch Definitionsvektoren der Projektionsfläche werden verändert,
         # um Drehgeschwindigkeit beizubehalten
-        self.ProjectionPlaneTop = Mul(self.ProjectionPlaneTop, Factor)
-        self.ProjectionPlaneLeft = Mul(self.ProjectionPlaneLeft, Factor)
+        self.ProjectionPlaneTop = mul(self.ProjectionPlaneTop, Factor)
+        self.ProjectionPlaneLeft = mul(self.ProjectionPlaneLeft, Factor)
 
         # Maximale Zoomstufe festgelegt
-        if Length(self.Camera) < 1:
-            Mul(self.Camera, 1 / Length(self.Camera))
+        if length(self.Camera) < 1:
+            mul(self.Camera, 1 / length(self.Camera))
         self.Update()
 
     def Rotate(self, X, Y):
         """dreht die Ansicht um die angegebenen Zahlen"""
-        LeftLength = Length(self.ProjectionPlaneLeft)
+        LeftLength = length(self.ProjectionPlaneLeft)
 
         # Kamera wird in Richtung Orientierungsvektoren verschoben und auf die vorherige Länge verkürzt
         # zuerst Y-, dann X-Drehung, einzeln da je ein Orientierungsvektor unverändert bleibt und zur Berechnung
         # des anderen verwendet werden kann
         # Orientierungsvektoren werden über Vektorprodukt neu berechnet
 
-        self.Camera = Add(self.Camera, Mul(self.ProjectionPlaneTop, Y))
-        self.ProjectionPlaneTop = VP(self.ProjectionPlaneLeft, self.Camera)
+        self.Camera = add(self.Camera, mul(self.ProjectionPlaneTop, Y))
+        self.ProjectionPlaneTop = cross(self.ProjectionPlaneLeft, self.Camera)
 
-        self.Camera = Add(self.Camera, Mul(self.ProjectionPlaneLeft, X))
-        self.ProjectionPlaneLeft = VP(self.Camera, self.ProjectionPlaneTop)
+        self.Camera = add(self.Camera, mul(self.ProjectionPlaneLeft, X))
+        self.ProjectionPlaneLeft = cross(self.Camera, self.ProjectionPlaneTop)
 
         # Längenkorrektur
-        self.ProjectionPlaneTop = Mul(self.ProjectionPlaneTop, self.TopLength / Length(self.ProjectionPlaneTop))
-        self.ProjectionPlaneLeft = Mul(self.ProjectionPlaneLeft, LeftLength / Length(self.ProjectionPlaneLeft))
-        self.Camera = Mul(self.Camera, self.CameraLength / Length(self.Camera))
+        self.ProjectionPlaneTop = mul(self.ProjectionPlaneTop, self.TopLength / length(self.ProjectionPlaneTop))
+        self.ProjectionPlaneLeft = mul(self.ProjectionPlaneLeft, LeftLength / length(self.ProjectionPlaneLeft))
+        self.Camera = mul(self.Camera, self.CameraLength / length(self.Camera))
 
         self.Update()
 
     def Update(self):
         """berechnet das Bild neu"""
         self.ComputedPositions = {(0, 0, 0): (self.MidX, self.MidY)}
-        self.CameraLength = Length(self.Camera)
-        self.TopLength = Length(self.ProjectionPlaneTop)
+        self.CameraLength = length(self.Camera)
+        self.TopLength = length(self.ProjectionPlaneTop)
         # Vektor von Kamera zu Mitte der Projektionsfläche
-        self.MidProjection = Sub(self.Camera, Mul(self.Camera, (1 - self.ProjectionPlaneDistance / self.CameraLength)))
+        self.MidProjection = sub(self.Camera, mul(self.Camera, (1 - self.ProjectionPlaneDistance / self.CameraLength)))
         self.Factor = self.ProjectionPlaneDistance * self.CameraLength
 
-        map(object_3D.Line3D.Redraw, self.Drawings)
-        map(object_3D.Planet3D.Redraw, self.Items)
         ObjectList = self.Drawings + self.Items
-        ObjectList.sort(key = lambda x: Length(Sub(x.MidPoint(), self.Camera)), reverse = True)
+        for Object in ObjectList:
+            Object.Redraw()
+        ObjectList.sort(key=lambda x: length(sub(x.MidPoint(), self.Camera)), reverse=True)
         for i in ObjectList:
             self.Canvas.tag_raise(i.Drawing)
 
     def DisplayDiameter(self, Position, Diameter):
         """berechnet den Anzeigedurchmesser eines Kreises aus dessen Mittelpunkt Position und
 dem eigentlichen Durchmesser Diameter"""
-        Factor = self.ProjectionPlaneDistance * -self.CameraLength / ScP(Sub(
+        Factor = self.ProjectionPlaneDistance * -self.CameraLength / dot(sub(
                  Position, self.Camera), self.Camera)
         return Diameter * Factor * 100
 
@@ -180,7 +178,7 @@ gibt None zurück, wenn sich dieser hinter dem Betrachter befindet"""
             pass
 
         # berechnet Abstand des Punktes von der Projektionsfläche
-        PlaneDistance = ScP(Sub(Position, self.Camera), self.Camera)
+        PlaneDistance = dot(sub(Position, self.Camera), self.Camera)
 
         # prüft, ob der Punkt hinter dem Betrachter liegt
         if PlaneDistance >= 0:
@@ -188,24 +186,24 @@ gibt None zurück, wenn sich dieser hinter dem Betrachter befindet"""
             return None
 
         # berechnet Projektionspunkt relativ zum Mittelpunkt der Projektionsfläche
-        ProjectionVector = Add(self.MidProjection, Mul(Sub(Position, self.Camera) , (
+        ProjectionVector = add(self.MidProjection, mul(sub(Position, self.Camera), (
             self.Factor / - PlaneDistance)))
 
-        if ProjectionVector == (0,0,0):
+        if ProjectionVector == (0, 0, 0):
             self.ComputedPositions[Position] = (self.MidX, self.MidY)
             return self.MidX, self.MidY
 
 
         # berechnet Abstand vom Mittelpunkt der Projektionsfläche
-        ProjectionVectorLength = Length(ProjectionVector)
+        ProjectionVectorLength = length(ProjectionVector)
 
         # berechnet den Winkel für die Koordinatenbestimmung mithilfe von Trigonometrie
-        CosTopAngle = ScP(ProjectionVector, self.ProjectionPlaneTop) / (
+        CosTopAngle = dot(ProjectionVector, self.ProjectionPlaneTop) / (
         ProjectionVectorLength * self.TopLength)
 
         # Koordinatenbestimmung
         try:
-            if ScP(ProjectionVector, self.ProjectionPlaneLeft) < 0:
+            if dot(ProjectionVector, self.ProjectionPlaneLeft) < 0:
                 Factor = 100
             else:
                 Factor = -100
@@ -242,8 +240,8 @@ Position1 nach Position2"""
 
     def CameraPlaneIntersection(self, Position1, Position2):
         """berechnet eien Punkt auf der Linie von C1 nach C2 vor dem Betrachter"""
-        Line = Sub(Position2, Position1)
-        return Mul(Add(Mul(Line, ScP(Sub(Position1, self.Camera), self.Camera) / - ScP(Line, self.Camera)), Position1), 0.999)
+        Line = sub(Position2, Position1)
+        return mul(add(mul(Line, dot(sub(Position1, self.Camera), self.Camera) / - dot(Line, self.Camera)), Position1), 0.999)
 
     def NewItem(self, Object):
         """erstellt ein 3D-Objekt für den Planeten Object"""

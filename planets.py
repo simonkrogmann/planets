@@ -1,19 +1,16 @@
 # -*- coding: cp1252 -*-
 import sys
-sys.path.append("bin")
-sys.path.append("gui")
-sys.path.append("io")
-import Tkinter
-import tkMessageBox
+import tkinter
 import urllib
 import os
-import webbrowser
+sys.path.append("model")
+sys.path.append("gui")
+sys.path.append("io")
 import sidebar
 import graphics
 import planet_manager
 import io_gui
 import controls
-import threading
 import settings_editor
 
 class PlanetsGUI:
@@ -42,7 +39,7 @@ class PlanetsGUI:
 
     def CreateWindow(self):
         """erstellt das Fenster und legt die Grundeigenschaften fest"""
-        self.Window = Tkinter.Tk()
+        self.Window = tkinter.Tk()
         self.Window.geometry("900x500")
         self.Window.title(self.Title)
         self.Window.protocol("WM_DELETE_WINDOW", self.Close)
@@ -69,7 +66,7 @@ class PlanetsGUI:
         self.MenuBarDict = {}
 
         # erstellt Menü
-        self.Menu = Tkinter.Menu(None, tearoff=0, takefocus=0)
+        self.Menu = tkinter.Menu(None, tearoff=0, takefocus=0)
         self.BuildMenu(self.MenuBarTemplate, self.Menu, self.MenuBarDict)
 
     def BuildMenu(self, MenuTemplate, CurrentMenu, MenuDict):
@@ -82,7 +79,7 @@ class PlanetsGUI:
 
             elif type(MenuEntry[1]) == tuple:
                 # Neues Untermenü
-                NewMenu = Tkinter.Menu(CurrentMenu, tearoff = 0)
+                NewMenu = tkinter.Menu(CurrentMenu, tearoff = 0)
                 CurrentMenu.add_cascade(label = MenuEntry[0], menu = NewMenu)
                 self.BuildMenu(MenuEntry[1], NewMenu, MenuDict)
 
@@ -100,9 +97,9 @@ class PlanetsGUI:
         Menu = MenuDict[Label]
         Index = Menu.index(Label)
         if Enabled:
-            Menu.entryconfig(Index, state = Tkinter.NORMAL)
+            Menu.entryconfig(Index, state = tkinter.NORMAL)
         else:
-            Menu.entryconfig(Index, state = Tkinter.DISABLED)
+            Menu.entryconfig(Index, state = tkinter.DISABLED)
 
 # Methoden für Nutzeraktionen
 
@@ -144,31 +141,29 @@ wenn eine neue Version vorhanden ist"""
         try:
             VersionData = urllib.urlopen("{0}version.data".format(self.Website)).read()
         except:
-            tkMessageBox.showinfo("Update", "The update server is currently unavailable.\n\
+            tkinter.messagebox.showinfo("Update", "The update server is currently unavailable.\n\
                                   Check your internet connection or try again later.")
             return
 
         NewVersion = VersionData.splitlines()[0]
         if NewVersion == self.Version:
-            tkMessageBox.showinfo("Update", "You are using the newest version of Planets.")
+            tkinter.messagebox.showinfo("Update", "You are using the newest version of Planets.")
         else:
-            if tkMessageBox.askyesno("Update", "You are using version {0}. \
+            if tkinter.messagebox.askyesno("Update", "You are using version {0}. \
 Do you want to upgrade to version {1}?".format(self.Version, NewVersion)):
-                VersionFile = file("update/version.data", "w")
-                VersionFile.write(self.Version)
-                VersionFile.close()
+                with open("update/version.data", "w") as VersionFile:
+                    VersionFile.write(self.Version)
 
                 UpdateData = urllib.urlopen(self.Website + "update/{0}.py".format(NewVersion)).read()
-                UpdateFile = file("update/update.py", "w")
-                UpdateFile.write(UpdateData)
-                UpdateFile.close()
+                with open("update/update.py", "w") as UpdateFile:
+                    UpdateFile.write(UpdateData)
 
                 os.system("py update/update.py")
                 self.Close()
 
     def About(self):
         """zeigt Versionsnummer und Credits an"""
-        tkMessageBox.showinfo("Version {0}".format(self.Version), "Created by {0}".format(self.Author))
+        tkinter.messagebox.showinfo("Version {0}".format(self.Version), "Created by {0}".format(self.Author))
 
     def Help(self):
         """öffnet die Hilfe im Webbrowser"""

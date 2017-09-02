@@ -1,5 +1,5 @@
 # -*- coding: cp1252 -*-
-import Tkinter
+import tkinter
 import bar
 
 class Controls:
@@ -36,14 +36,14 @@ class Controls:
 
     def Hide(self):
         """versteckt die Toolbar"""
-        self.HiddenBar.grid(row = 0, column = 2, sticky = Tkinter.N + Tkinter.W)
+        self.HiddenBar.grid(row=0, column=2, sticky=tkinter.N + tkinter.W)
         self.Bar.grid_forget()
 
     def Show(self):
         """zeigt die Toolbar an"""
         self.HiddenBar.grid_forget()
-        self.Bar.grid(row = 0, column = 2,
-                        sticky = Tkinter.N + Tkinter.S + Tkinter.E + Tkinter.W)
+        self.Bar.grid(row=0, column=2,
+                        sticky=tkinter.N + tkinter.S + tkinter.E + tkinter.W)
 
 # Methoden um Benutzereingaben an den Planetenmanager weiterzureichen
 
@@ -67,7 +67,7 @@ class Controls:
     def SetTime(self, Value):
         """formatiert den Sekundenwert Value und zeigt ihn an"""
         TimeString = "{:0>4}:{:0>2}:{:0>2}:{:0>2}"
-        self.Time.Set(TimeString.format(Value / 86400, (Value / 3600) % 24, (Value / 60) % 60,
+        self.Time.Set(TimeString.format(Value // 86400, (Value // 3600) % 24, (Value // 60) % 60,
                                         Value % 60))
 
     def SetSpeed(self, Value):

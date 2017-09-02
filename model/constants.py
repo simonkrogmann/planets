@@ -1,5 +1,4 @@
-"""Dieses Mosul stellt einige Konstanten bereit"""
-from math import pi
+"""Dieses Modul stellt einige Konstanten bereit"""
 
 # Gravitationskonstante
 G=6.673*10**-11

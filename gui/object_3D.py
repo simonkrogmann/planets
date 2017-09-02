@@ -1,6 +1,6 @@
 # -*- coding: cp1252 -*-
-import vector
 import time
+import vector
 
 class Planet3D:
     """ein 3D-Objekt für das graphics-Modul, dass mit einem Planeten verbunden ist"""
@@ -12,8 +12,8 @@ class Planet3D:
         self.Trace = []
         self.Color = Planet["color"]
         self.TraceState = -1
-        self.Drawing = self.Parent.Canvas.create_oval(-5, -5, -6, -6, fill = Planet["color"],
-                                                      outline = "")
+        self.Drawing = self.Parent.Canvas.create_oval(-5, -5, -6, -6, fill=Planet["color"],
+                                                      outline="")
         self.Redraw()
 
     def ResetTrace(self):
@@ -67,7 +67,7 @@ Mögliche Daten sind die Planetenattribute."""
     def SetColor(self, Color):
         """ändert die Planetenfarbe"""
         self.Color = Color
-        self.Parent.Canvas.itemconfig(self.Drawing, fill = Color)
+        self.Parent.Canvas.itemconfig(self.Drawing, fill=Color)
 
     def Delete(self):
         """entfernt den Planeten aus der Zeichnung"""
@@ -89,18 +89,14 @@ class Line3D:
         self.End = End
         self.OnScreen = False
 
-        self.Drawing = self.Parent.Canvas.create_line(-5, -5, -5, -5, fill = Color)
+        self.Drawing = self.Parent.Canvas.create_line(-5, -5, -5, -5, fill=Color)
         self.Redraw()
 
     def Redraw(self):
         """zeichnet die Linie neu"""
         Coordinates = self.Parent.LineDisplayCoordinates(self.Begin, self.End)
-        if Coordinates != (-5,-5,-5,-5):
-            self.Parent.Canvas.coords(self.Drawing, Coordinates)
-            self.OnScreen = True
-        elif self.OnScreen:
-            self.OnScreen = False
-            self.Parent.Canvas.coords(self.Drawing, Coordinates)
+        self.OnScreen = Coordinates == (-5, -5, -5, -5)
+        self.Parent.Canvas.coords(self.Drawing, Coordinates)
 
     def MidPoint(self):
         """gibt den Mittelpunkt der Linie zurück"""

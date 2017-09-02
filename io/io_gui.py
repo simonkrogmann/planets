@@ -1,13 +1,13 @@
 # -*- coding: cp1252 -*-
 from load import Load
 from save import Save
-from tkFileDialog import asksaveasfilename,askopenfilename
-from tkMessageBox import askyesnocancel
+from tkinter.filedialog import asksaveasfilename,askopenfilename
+from tkinter.messagebox import askyesnocancel
 
 class IOGui:
     """Dieses Modul stellt eine Oberfläche und Verwaltung
 für das Speichern von Python-Standard-Objekten in Dateien bereit."""
-    def __init__(self, Extension, Parent, Type, InitialDirectory = None, Autosave = False):
+    def __init__(self, Extension, Parent, Type, InitialDirectory=None, Autosave = False):
         self.Parent = Parent
         self.Type = Type
         self.Extension = Extension
@@ -28,9 +28,8 @@ Falls noch kein Speicherort festgelegt ist, wird SaveAt aufgerufen"""
         try:
             if self.File:
                 SaveStr = Save(obj)
-                f=file(self.File, "w")
-                f.write(SaveStr)
-                f.close()
+                with open(self.File, "w") as f:
+                    f.write(SaveStr)
             else:
                 return self.SaveAt(obj)
         except:
@@ -42,20 +41,19 @@ Falls noch kein Speicherort festgelegt ist, wird SaveAt aufgerufen"""
         """Fragt über den Windows-Dialog einen Speicherort ab, und speichert das Objekt dort"""
         try:
             if self.Path:
-                Target = asksaveasfilename(filetypes = [(self.Type, "." + self.Extension)],
-                                           parent = self.Parent, initialdir = self.Path)
+                Target = asksaveasfilename(filetypes=[(self.Type, "." + self.Extension)],
+                                           parent=self.Parent, initialdir=self.Path)
             else:
-                Target = asksaveasfilename(filetypes = [(self.Type, "." + self.Extension)],
-                                           parent = self.Parent)
+                Target = asksaveasfilename(filetypes=[(self.Type, "." + self.Extension)],
+                                           parent=self.Parent)
             if Target:
                 self.Path = Target.rpartition("/")[0]
                 if not Target.endswith("."  + self.Extension):
                     Target += "." + self.Extension
                 self.File = Target
                 SaveStr = Save(obj)
-                f = file(Target, "w")
-                f.write(SaveStr)
-                f.close()
+                with open(Target, "w") as f:
+                    f.write(SaveStr)
             else:
                 return 1
         except:
@@ -66,9 +64,8 @@ Falls noch kein Speicherort festgelegt ist, wird SaveAt aufgerufen"""
     def LoadTemplate(self, Target):
         """lädt eine Vorlage am Speicherort Target in die Datei"""
         try:
-            f = file(Target, "r")
-            Content = f.read()
-            f.close()
+            with open(Target, "r") as f:
+                Content = f.read()
             obj = Load(Content)
             self.Saved = True
             return obj
@@ -78,24 +75,20 @@ Falls noch kein Speicherort festgelegt ist, wird SaveAt aufgerufen"""
     def Load(self):
         """Fragt über den Windows-Dialog eine zu öffnende Datei ab
 und gibt den geladenen Inhalt zurück"""
-        try:
-            if self.Path:
-                Target = askopenfilename(filetypes=[(self.Type, "." + self.Extension)],
-                                         parent = self.Parent, initialdir = self.Path)
-            else:
-                Target = askopenfilename(filetypes=[(self.Type, "." + self.Extension)],
-                                         parent = self.Parent)
-            if Target:
-                self.Path = Target.rpartition("/")[0]
-                self.File = Target
-                f = file(Target, "r")
+        if self.Path:
+            Target = askopenfilename(filetypes=[(self.Type, "." + self.Extension)],
+                                     parent=self.Parent, initialdir=self.Path)
+        else:
+            Target = askopenfilename(filetypes=[(self.Type, "." + self.Extension)],
+                                     parent=self.Parent)
+        if Target:
+            self.Path = Target.rpartition("/")[0]
+            self.File = Target
+            with open(Target, "r") as f:
                 Content = f.read()
-                f.close()
-                obj = Load(Content)
-                self.Saved = True
-                return obj
-        except:
-            pass
+            obj = Load(Content)
+            self.Saved = True
+            return obj
 
     def Close(self, obj):
         """fragt den Nutzer bei ungespeicherten Änderungen,

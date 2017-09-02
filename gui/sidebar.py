@@ -1,11 +1,10 @@
 # -*- coding: cp1252 -*-
-import Tkinter
+import tkinter
 import scrollbar
 import item
 import item_info
 import item_editor
 import bar
-import tkMessageBox
 
 class Sidebar:
     """Dieses Modul stellt die Seitenleiste mit der Liste bereit"""
@@ -17,7 +16,7 @@ class Sidebar:
 
         self.CreateToolBar(MenuMethod)
 
-        self.Canvas = Tkinter.Canvas(self.Parent.Window, takefocus = True, borderwidth = -2,
+        self.Canvas = tkinter.Canvas(self.Parent.Window, takefocus = True, borderwidth = -2,
                                      width = Sidebar.Width + 4, background = "darkgrey",
                                      highlightthickness = 0)
 
@@ -58,7 +57,7 @@ class Sidebar:
     def Hide(self):
         """versteckt die Seitenleiste"""
         self.CloseInfo()
-        self.HiddenBar.grid(row = 0, column = 1, sticky = Tkinter.N + Tkinter.W)
+        self.HiddenBar.grid(row = 0, column = 1, sticky = tkinter.N + tkinter.W)
         self.Bar.grid_forget()
         self.Canvas.grid_forget()
 
@@ -66,9 +65,9 @@ class Sidebar:
         """zeigt die Seitenleiste"""
         self.HiddenBar.grid_forget()
         self.Bar.grid(row = 0, column = 0,
-                      sticky = Tkinter.N + Tkinter.S + Tkinter.W + Tkinter.E)
+                      sticky = tkinter.N + tkinter.S + tkinter.W + tkinter.E)
         self.Canvas.grid(row = 1, column = 0,
-                         sticky = Tkinter.N + Tkinter.S + Tkinter.W + Tkinter.E)
+                         sticky = tkinter.N + tkinter.S + tkinter.W + tkinter.E)
 
     def ShowMenu(self):
         """zeigt das Hauptmenü"""
@@ -100,7 +99,7 @@ class Sidebar:
                                     ("Delete",      self.Delete)
                                     )
         self.ContextMenuDict = {}
-        self.ContextMenu = Tkinter.Menu(None, tearoff=0, takefocus=0)
+        self.ContextMenu = tkinter.Menu(None, tearoff=0, takefocus=0)
         self.Parent.BuildMenu(self.ContextMenuTemplate, self.ContextMenu, self.ContextMenuDict)
 
 # Methoden für GUI-Ereignisse
@@ -253,5 +252,5 @@ class Sidebar:
 
     def SimulationWarning(self):
         """zeigt ein Warnungsfenster, wenn für eine Aktion erst die Simulation gestoppt werden muss"""
-        tkMessageBox.showwarning("Simulation Running",
+        tkinter.messagebox.showwarning("Simulation Running",
 "Stop the Simulation by clicking on the square in the toolbar to proceed with this action.")

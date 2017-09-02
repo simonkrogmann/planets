@@ -3,7 +3,6 @@ import planet
 import vector
 import time
 import threading
-import tkMessageBox
 
 class PlanetManager:
     """Objekt zur Verwaltung der Planeten und Simulation der Bewegung dieser"""
@@ -97,7 +96,7 @@ Das Fenster kann dabei weiterhin auf Benutzeranfragen reagieren."""
         Length = len(self.Planets)
         for Planet in self.Planets:
             Begin += 1
-            for i in xrange(Begin, Length):
+            for i in range(Begin, Length):
                 Planet.GravityOf(self.Planets[i])
             Planet.SavePosition(Interval)
         self.ComputedStep += 1
@@ -105,7 +104,7 @@ Das Fenster kann dabei weiterhin auf Benutzeranfragen reagieren."""
     def ShowStep(self, Step):
         """lässt die Planeten ihre Zustände beim Schritt Step (als Integer) an
 die Observer weitergeben"""
-        
+
         # verhindert Zeichnung einer Spur beim Rückwärtslaufen
         if Step > self.MaximumStep:
             self.MaximumStep = Step

@@ -1,5 +1,5 @@
 # -*- coding: cp1252 -*-
-import Tkinter
+import tkinter
 
 class ItemInfo:
     """Ein kleiner Infobereich für einen Planeten, der neben der Sidebar angezeigt wird"""
@@ -15,26 +15,26 @@ class ItemInfo:
         if ScreenPosition < 21:
             ScreenPosition = 21
 
-        self.Canvas = Tkinter.Canvas(self.Parent.Window, width = Width, height = Height, bd = -2,
-                                     highlightthickness = 0)
-        self.Canvas.place(x = X, y = ScreenPosition)
+        self.Canvas = tkinter.Canvas(self.Parent.Window, width=Width, height=Height, bd=-2,
+                                     highlightthickness=0)
+        self.Canvas.place(x=X, y=ScreenPosition)
         self.Canvas.focus_set()
         for i in range(5):
-            self.Canvas.create_line(i, 0, i, Height, fill = "#3388FF")
+            self.Canvas.create_line(i, 0, i, Height, fill="#3388FF")
 
         self.Info = {}
 
         Y = 5
         for Tag in ["name", "position", "velocity", "mass", "diameter"]:
-            self.Canvas.create_text(10, Y, anchor = Tkinter.NW, text = Tag.title())
-            self.Info[Tag] = self.Canvas.create_text(70, Y, anchor = Tkinter.NW,
-                                                    text = self.Planet[Tag])
+            self.Canvas.create_text(10, Y, anchor=tkinter.NW, text=Tag.title())
+            self.Info[Tag] = self.Canvas.create_text(70, Y, anchor=tkinter.NW,
+                                                    text=self.Planet[Tag])
             Y += 20
 
     def Update(self, Tag, Value):
         """aktualisiert einen der Werte entsprechend des angegebenen Planetenattributs"""
         if Tag in self.Info:
-            self.Canvas.itemconfig(self.Info[Tag], text = Value)
+            self.Canvas.itemconfig(self.Info[Tag], text=Value)
 
     def Close(self):
         """schließt den Infobereich"""
