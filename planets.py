@@ -44,25 +44,26 @@ class PlanetsGUI:
         self.Window.title(self.Title)
         self.Window.protocol("WM_DELETE_WINDOW", self.Close)
 
-        self.Window.grid_rowconfigure(1, weight = 1, pad = 0)
-        self.Window.grid_columnconfigure(2, weight = 1, pad = 0)
+        self.Window.grid_rowconfigure(1, weight=1, pad=0)
+        self.Window.grid_columnconfigure(2, weight=1, pad=0)
 
     def BuildTopMenu(self):
         """erstellt das Hauptmenü"""
         # Menüvorlage
-        self.MenuBarTemplate = (("New File",    self.NewFile),
-                                ("Load",        self.Load),
-                                ("Save",        self.Save),
-                                ("Save As",     self.SaveAs),
-                                PlanetsGUI.Separator,
-                                ("Settings",    self.Settings),
-                                PlanetsGUI.Separator,
-                                ("Update",      self.Update),
-                                ("About",       self.About),
-                                ("Help",        self.Help),
-                                PlanetsGUI.Separator,
-                                ("Close",       self.Close)
-                                )
+        self.MenuBarTemplate = (
+            ("New File", self.NewFile),
+            ("Load",     self.Load),
+            ("Save",     self.Save),
+            ("Save As",  self.SaveAs),
+            PlanetsGUI.Separator,
+            ("Settings", self.Settings),
+            PlanetsGUI.Separator,
+            ("Update",   self.Update),
+            ("About",    self.About),
+            ("Help",     self.Help),
+            PlanetsGUI.Separator,
+            ("Close",    self.Close)
+        )
         self.MenuBarDict = {}
 
         # erstellt Menü
@@ -77,29 +78,29 @@ class PlanetsGUI:
                 # Neuer Trennstrich
                 CurrentMenu.add_separator()
 
-            elif type(MenuEntry[1]) == tuple:
+            elif isinstance(MenuEntry[1], tuple):
                 # Neues Untermenü
-                NewMenu = tkinter.Menu(CurrentMenu, tearoff = 0)
-                CurrentMenu.add_cascade(label = MenuEntry[0], menu = NewMenu)
+                NewMenu = tkinter.Menu(CurrentMenu, tearoff=0)
+                CurrentMenu.add_cascade(label=MenuEntry[0], menu=NewMenu)
                 self.BuildMenu(MenuEntry[1], NewMenu, MenuDict)
 
             else:
                 # Neuer Eintrag
-                CurrentMenu.add_command(label = MenuEntry[0], command = MenuEntry[1])
+                CurrentMenu.add_command(label=MenuEntry[0], command=MenuEntry[1])
 
                 # speichert Ort eines Eintrags für spätere Bearbeitung
                 MenuDict[MenuEntry[0]] = CurrentMenu
 
 # Methoden um GUI zu bearbeiten
 
-    def ConfigMenuEntry(self, Label, MenuDict, Enabled = True):
+    def ConfigMenuEntry(self, Label, MenuDict, Enabled=True):
         """aktiviert/deaktiviert einen Menüeintrag eines mit BuildMenu erstellten Menüs"""
         Menu = MenuDict[Label]
         Index = Menu.index(Label)
         if Enabled:
-            Menu.entryconfig(Index, state = tkinter.NORMAL)
+            Menu.entryconfig(Index, state=tkinter.NORMAL)
         else:
-            Menu.entryconfig(Index, state = tkinter.DISABLED)
+            Menu.entryconfig(Index, state=tkinter.DISABLED)
 
 # Methoden für Nutzeraktionen
 
@@ -141,8 +142,8 @@ wenn eine neue Version vorhanden ist"""
         try:
             VersionData = urllib.urlopen("{0}version.data".format(self.Website)).read()
         except:
-            tkinter.messagebox.showinfo("Update", "The update server is currently unavailable.\n\
-                                  Check your internet connection or try again later.")
+            tkinter.messagebox.showinfo("Update", """The update server is currently unavailable.
+Check your internet connection or try again later.""")
             return
 
         NewVersion = VersionData.splitlines()[0]
@@ -158,8 +159,8 @@ Do you want to upgrade to version {1}?".format(self.Version, NewVersion)):
                 with open("update/update.py", "w") as UpdateFile:
                     UpdateFile.write(UpdateData)
 
-                os.system("py update/update.py")
                 self.Close()
+                os.system("python update/update.py")
 
     def About(self):
         """zeigt Versionsnummer und Credits an"""
@@ -167,7 +168,7 @@ Do you want to upgrade to version {1}?".format(self.Version, NewVersion)):
 
     def Help(self):
         """öffnet die Hilfe im Webbrowser"""
-        os.system("start explorer \"help\help.pdf\"")
+        os.system("xdg-open help/help.pdf")
 
     def Close(self):
         """schließt das Programm"""

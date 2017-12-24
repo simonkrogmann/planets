@@ -39,7 +39,7 @@ class Planet3D:
         """ändert die Zeichnung des Planeten entsprechend der Daten.
 Mögliche Daten sind die Planetenattribute."""
         if Tag == "position":
-            if type(Value) == tuple:
+            if isinstance(Value, tuple):
                 Tuple = Value
             else:
                 Tuple = Value.Tuple()
@@ -100,5 +100,5 @@ class Line3D:
 
     def MidPoint(self):
         """gibt den Mittelpunkt der Linie zurück"""
-        return ((self.Begin[0] + self.End[0])/ 2,  (self.Begin[1] + self.End[1])/ 2,
+        return ((self.Begin[0] + self.End[0])/ 2, (self.Begin[1] + self.End[1])/ 2,
                 (self.Begin[2] + self.End[2])/ 2)
